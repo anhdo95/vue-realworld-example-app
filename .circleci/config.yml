@@ -2,35 +2,34 @@ version: 2
 jobs:
   build-job:
     docker:
-      image: circleci/node:10.8.0
+      - image: circleci/node:10.8.0
 
     working_directory: ~/repo
 
     steps:
       - restore_cache:
-        name: "Restoring Cache"
-        keys:
-          - v1-dependencies-{{ checksum="package.json" }}
-          - v1-dependencies- # used if checksum fails
+          name: "Restoring Cache"
+          keys:
+            - v1-dependencies-{{ checksum="package.json" }}
+            - v1-dependencies- # used if checksum fails
 
-      - run:
-        - yarn install
-        - yarn build
+      - run: yarn install
+      - run: yarn build
 
       - save_cache:
-        key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
-        paths:
-          - node_modules
-          - dist
-          - package.json
-          - firebase.json
-          - .firebaserc
+          key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
+          paths:
+            - node_modules
+            - dist
+            - package.json
+            - firebase.json
+            - .firebaserc
 
       - run: yarn test:unit
 
   deploy-job:
     docker:
-      image: circleci/node:10.8.0
+      - image: circleci/node:10.8.0
 
     working_directory: ~/repo
 
