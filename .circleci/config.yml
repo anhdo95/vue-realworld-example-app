@@ -7,25 +7,26 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      restore_cache:
-        name: "Restoring Cache"
-        keys:
-          - v1-dependencies-{{ checksum="package.json" }}
-          - v1-dependencies- # used if checksum fails
+      - restore_cache:
+          name: "Restoring Cache"
+          keys:
+            - v1-dependencies-{{ checksum="package.json" }}
+            - v1-dependencies- # used if checksum fails
 
-      run: yarn install
-      run: yarn build
+      - run:
+        - yarn install
+        - yarn build
 
-      save_cache:
-        key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
-        paths:
-          - node_modules
-          - dist
-          - package.json
-          - firebase.json
-          - .firebaserc
+      - save_cache:
+          key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
+          paths:
+            - node_modules
+            - dist
+            - package.json
+            - firebase.json
+            - .firebaserc
 
-      run: yarn test:unit
+      - run: yarn test:unit
 
   deploy-job:
     docker:
@@ -34,29 +35,30 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      restore_cache:
-        name: "Restoring Cache"
-        key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
+      - restore_cache:
+          name: "Restoring Cache"
+          key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
 
-      run:
-        name: Showing Directory
-        command: pwd
-      run:
-        name: Looking in Directory
-        command: ls -ltr
-      run:
-        name: Deploying "master" to Firebase
-        command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
+      - run:
+          name: Showing Directory
+          command: pwd
+      - run:
+          name: Looking in Directory
+          command: ls -ltr
+      - run:
+          name: Deploying "master" to Firebase
+          command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
 
 workflows:
   version: 2
   deploy:
     jobs:
-      build-job
-      deploy-job:
-        requires: build-job
-        filters:
-          branches:
-            only: master
+      - build-job
+      - deploy-job:
+          requires:
+            - build-job
+          filters:
+            branches:
+              only: master
 
 
