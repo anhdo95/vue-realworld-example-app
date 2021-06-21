@@ -1,39 +1,35 @@
-version: 2
-jobs:
-  build-job:
-    docker:
-      - image: circleci/node:10.8.0
+version: 2.1
 
-    working_directory: ~/repo
-
+commands:
+  restore_cache_cmd:
     steps:
-      - checkout
       - restore_cache:
           name: "Restoring Cache"
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies- # used if checksum fails
+            - v1-dependencies-
 
-      - run: yarn install
-      - run: yarn build
-
+  save_cache_cmd:
+    steps:
       - save_cache:
-          key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
           paths:
             - node_modules
             - dist
             - package.json
             - firebase.json
             - .firebaserc
+          key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
 
+  build_cmd:
+    steps:
+      - checkout
+      - restore_cache_cmd
+      - run: yarn install
+      - run: yarn build
+      - save_cache_cmd
       - run: yarn test:unit
 
-  deploy-job:
-    docker:
-      - image: circleci/node:10.8.0
-
-    working_directory: ~/repo
-
+  deploy_cmd:
     steps:
       - restore_cache:
           name: "Restoring Cache"
@@ -48,6 +44,24 @@ jobs:
       - run:
           name: Deploying "master" to Firebase
           command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
+
+executors:
+  docker-executor:
+    docker:
+      - image: circleci/node:10.8.0
+
+jobs:
+  build-job:
+    executor: docker-executor
+    working_directory: ~/repo
+    steps:
+      - build_cmd
+
+  deploy-job:
+    executor: docker-executor
+    working_directory: ~/repo
+    steps:
+      - deploy_cmd
 
 workflows:
   version: 2
