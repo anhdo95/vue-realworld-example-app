@@ -1,13 +1,17 @@
 version: 2.1
 
 commands:
-  restore_cache_cmd:
+  restore_deps_cache_cmd:
     steps:
       - restore_cache:
-          name: "Restoring Cache"
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
+
+  restore_cache_cmd:
+    steps:
+      - restore_cache:
+          key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
 
   save_cache_cmd:
     steps:
@@ -23,7 +27,7 @@ commands:
   build_cmd:
     steps:
       - checkout
-      - restore_cache_cmd
+      - restore_deps_cache_cmd
       - run: yarn install
       - run: yarn build
       - save_cache_cmd
@@ -31,9 +35,7 @@ commands:
 
   deploy_cmd:
     steps:
-      - restore_cache:
-          name: "Restoring Cache"
-          key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
+      - restore_cache_cmd
 
       - run:
           name: Showing Directory
@@ -74,5 +76,3 @@ workflows:
           filters:
             branches:
               only: master
-
-
