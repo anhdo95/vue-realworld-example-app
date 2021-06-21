@@ -10,7 +10,7 @@ jobs:
       - restore_cache:
           name: "Restoring Cache"
           keys:
-            - v1-dependencies-{{ checksum="package.json" }}
+            - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies- # used if checksum fails
 
       - run: yarn install
