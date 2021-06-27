@@ -75,19 +75,35 @@ jobs:
 
 workflows:
   version: 2.1
-  deploy:
+
+  commit:
     jobs:
-      - build-job
-      - greeting:
-          requires:
-            - build-job
-      - hold:
-          type: approval
-          requires:
-            - greeting
-      - deploy-job:
-          requires:
-            - hold
+      - greeting
+
+  daily:
+    triggers:
+      - schedule:
+          cron: 42 * * * *
           filters:
             branches:
-              only: master
+              only:
+                - master
+    jobs:
+      - deploy-job
+
+  # deploy:
+  #   jobs:
+  #     - build-job
+  #     - greeting:
+  #         requires:
+  #           - build-job
+  #     - hold:
+  #         type: approval
+  #         requires:
+  #           - greeting
+  #     - deploy-job:
+  #         requires:
+  #           - hold
+  #         filters:
+  #           branches:
+  #             only: master
