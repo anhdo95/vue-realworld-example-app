@@ -86,13 +86,13 @@ workflows:
                 - test
 
   daily:
-    triggers:
-      - schedule:
-          cron: "27,30 * * 6 0"
-          filters:
-            branches:
-              only:
-                - master
+    # triggers:
+    #   - schedule:
+    #       cron: "45,50 * * 6 0"
+    #       filters:
+    #         branches:
+    #           only:
+    #             - master
     jobs:
       - build-job
       - hold:
@@ -104,4 +104,22 @@ workflows:
             - hold
           filters:
             branches:
-              only: master
+              only:
+                - master
+
+  # deploy:
+  #   jobs:
+  #     - build-job
+  #     - greeting:
+  #         requires:
+  #           - build-job
+  #     - hold:
+  #         type: approval
+  #         requires:
+  #           - greeting
+  #     - deploy-job:
+  #         requires:
+  #           - hold
+  #         filters:
+  #           branches:
+  #             only: master
