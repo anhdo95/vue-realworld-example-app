@@ -11,7 +11,7 @@ commands:
   restore_cache_cmd:
     steps:
       - restore_cache:
-          key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
+          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
 
   save_cache_cmd:
     steps:
@@ -22,7 +22,7 @@ commands:
             - package.json
             - firebase.json
             - .firebaserc
-          key: v1-dist-$CIRCLE_BRANCH-$CIRCLE_SHA1
+          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
 
   build_cmd:
     steps:
@@ -41,11 +41,14 @@ commands:
           name: Showing Directory
           command: pwd
       - run:
+          name: Install Firebase
+          command: npm install --save-dev firebase-tools
+      - run:
           name: Looking in Directory
           command: ls -ltr
       - run:
           name: Deploying "master" to Firebase
-          command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
+          command: yarn firebase-deploy -- --token=$FIREBASE_DEPLOY_TOKEN
 
 executors:
   docker-executor:
@@ -66,7 +69,7 @@ jobs:
       - deploy_cmd
 
 workflows:
-  version: 2
+  version: 2.1
   deploy:
     jobs:
       - build-job
