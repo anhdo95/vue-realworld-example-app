@@ -71,20 +71,34 @@ jobs:
   greeting:
     executor: docker-executor
     steps:
-      - run: echo 'Hello world!'
+      - run: echo $GREETING_MESSAGE
 
 workflows:
   version: 2.1
-  deploy:
+
+  commit:
+    jobs:
+      - greeting:
+          context: "Daily build"
+          filters:
+            branches:
+              only:
+                - test
+
+  daily:
+    triggers:
+      - schedule:
+          cron: "17,19 * * 6 0"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - build-job
-      - greeting:
-          requires:
-            - build-job
       - hold:
           type: approval
           requires:
-            - greeting
+            - build-job
       - deploy-job:
           requires:
             - hold
