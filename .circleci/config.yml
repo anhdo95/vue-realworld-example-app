@@ -71,7 +71,7 @@ jobs:
   greeting:
     executor: docker-executor
     steps:
-      - run: echo $GREETING_MESSAGE
+      - run: echo {{ .Environment.GREETING_MESSAGE }}
 
 workflows:
   version: 2.1
@@ -88,7 +88,7 @@ workflows:
   daily:
     triggers:
       - schedule:
-          cron: "25,28 * * 6 0"
+          cron: "27,30 * * 6 0"
           filters:
             branches:
               only:
