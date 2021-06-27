@@ -88,7 +88,7 @@ workflows:
   daily:
     triggers:
       - schedule:
-          cron: "27,30 * * 6 0"
+          cron: "45,50 * * 6 0"
           filters:
             branches:
               only:
@@ -104,4 +104,22 @@ workflows:
             - hold
           filters:
             branches:
-              only: master
+              only:
+                - master
+
+  # deploy:
+  #   jobs:
+  #     - build-job
+  #     - greeting:
+  #         requires:
+  #           - build-job
+  #     - hold:
+  #         type: approval
+  #         requires:
+  #           - greeting
+  #     - deploy-job:
+  #         requires:
+  #           - hold
+  #         filters:
+  #           branches:
+  #             only: master
