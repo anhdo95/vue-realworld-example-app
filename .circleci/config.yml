@@ -68,14 +68,26 @@ jobs:
     steps:
       - deploy_cmd
 
+  greeting:
+    executor: docker-executor
+    steps:
+      - run: echo 'Hello world!'
+
 workflows:
   version: 2.1
   deploy:
     jobs:
       - build-job
-      - deploy-job:
+      - greeting:
           requires:
             - build-job
+      - hold:
+          type: approval
+          requires:
+            - greeting
+      - deploy-job:
+          requires:
+            - hold
           filters:
             branches:
               only: master
