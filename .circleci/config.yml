@@ -71,7 +71,10 @@ jobs:
   greeting:
     executor: docker-executor
     steps:
-      - run: echo {{ .Environment.GREETING_MESSAGE }}
+      - run:
+          command: echo $GREETING_TEXT
+          environment:
+            GREETING_TEXT: "special thanks for the first day"
 
 workflows:
   version: 2.1
