@@ -44,6 +44,15 @@ commands:
           name: Install Firebase
           command: npm install --save-dev firebase-tools
       - run:
+          name: Keeping Build Url Artifact
+          command: |
+            mkdir ~/repo/tmp
+            echo $CIRCLE_BUILD_URL > ~/repo/tmp/$CIRCLE_PULL_REQUEST;
+
+      - store_artifacts:
+          path: ~/repo/tmp
+
+      - run:
           name: Looking in Directory
           command: ls -ltr
       - run:
