@@ -43,7 +43,6 @@ commands:
           command: |
             mkdir ~/repo/tmp;
             cp *tests/unit/**/*.spec.* ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
-          when: on_fail
 
       - store_artifacts:
           path: ~/repo/tmp
