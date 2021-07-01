@@ -41,8 +41,8 @@ commands:
       - run:
           name: Keeping Build Url Artifact
           command: |
-            mkdir /tmp;
-            cp *tests/unit/**/*.spec.* /tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
+            mkdir /tmp
+            cp *tests/unit/**/*.spec.* /tmp
 
       - store_artifacts:
           path: /tmp
@@ -120,13 +120,13 @@ workflows:
       #     type: approval
       #     requires:
       #       - build-job
-      - deploy-job:
-          requires:
-            - build-job
-          filters:
-            branches:
-              only:
-                - master
+      # - deploy-job:
+      #     requires:
+      #       - build-job
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
   # deploy:
   #   jobs:
   #     - build-job
