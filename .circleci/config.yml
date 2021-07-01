@@ -41,11 +41,11 @@ commands:
       - run:
           name: Keeping Build Url Artifact
           command: |
-            mkdir ~/repo/tmp;
-            cp *tests/unit/**/*.spec.* ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
+            mkdir /tmp;
+            cp *tests/unit/**/*.spec.* /tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
 
       - store_artifacts:
-          path: ~/repo/tmp
+          path: /tmp
 
       # - save_cache_cmd
       # - run: yarn test:unit
