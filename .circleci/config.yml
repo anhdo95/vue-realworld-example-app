@@ -35,14 +35,14 @@ commands:
           command: ls -ltr
 
       - run:
-          name: Looking in Directory
+          name: Finding tests in Directory
           command: find *tests/unit/**/*.spec.*
 
       - run:
           name: Keeping Build Url Artifact
           command: |
             mkdir ~/repo/tmp;
-            cp ~/repo/*tests/unit/**/*.spec.js ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
+            cp *tests/unit/**/*.spec.* ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
           when: on_fail
 
       - store_artifacts:
