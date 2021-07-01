@@ -27,11 +27,21 @@ commands:
   build_cmd:
     steps:
       - checkout
-      - restore_deps_cache_cmd
-      - run: yarn install
-      - run: yarn build
-      - save_cache_cmd
-      - run: yarn test:unit
+      # - restore_deps_cache_cmd
+      # - run: yarn install
+      # - run: yarn build
+      - run:
+          name: Keeping Build Url Artifact
+          command: |
+            mkdir ~/repo/tmp;
+            cp tests/**/*.spec.* ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
+          when: on_fail
+
+      - store_artifacts:
+          path: ~/repo/tmp
+
+      # - save_cache_cmd
+      # - run: yarn test:unit
 
   deploy_cmd:
     steps:
@@ -43,15 +53,6 @@ commands:
       - run:
           name: Install Firebase
           command: npm install --save-dev firebase-tools
-      - run:
-          name: Keeping Build Url Artifact
-          command: |
-            mkdir ~/repo/tmp;
-            cp tests/**/*.spec.* ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
-          when: on_fail
-
-      - store_artifacts:
-          path: ~/repo/tmp
 
       - run:
           name: Looking in Directory
@@ -119,7 +120,6 @@ workflows:
             branches:
               only:
                 - master
-
   # deploy:
   #   jobs:
   #     - build-job
