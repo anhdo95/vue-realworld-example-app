@@ -35,18 +35,18 @@ commands:
           command: ls -ltr
 
       - run:
-          name: Find
-          command: find *tests/**/*.spec.*
+          name: Looking in Directory
+          command: find *tests/unit/**/*.spec.*
 
-      # - run:
-      #     name: Keeping Build Url Artifact
-      #     command: |
-      #       mkdir ~/repo/tmp;
-      #       cp ~/repo/tests/**/*.spec.* ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
-      #     when: on_fail
+      - run:
+          name: Keeping Build Url Artifact
+          command: |
+            mkdir ~/repo/tmp;
+            cp ~/repo/*tests/unit/**/*.spec.js ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
+          when: on_fail
 
-      # - store_artifacts:
-      #     path: ~/repo/tmp
+      - store_artifacts:
+          path: ~/repo/tmp
 
       # - save_cache_cmd
       # - run: yarn test:unit
