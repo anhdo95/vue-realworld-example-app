@@ -45,7 +45,7 @@ commands:
             cp *tests/unit/**/*.spec.* /tmp
 
       - store_artifacts:
-          path: tmp/article.module.spec.js
+          path: /tests/unit/**/article.module.spec.js
           destination: artifact-file
 
       - store_artifacts:
