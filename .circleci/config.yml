@@ -38,7 +38,7 @@ commands:
           name: Keeping Build Url Artifact
           command: |
             mkdir ~/repo/tmp;
-            cp tests/**/*.spec.* ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
+            cp ~/repo/tests/**/*.spec.* ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
           when: on_fail
 
       - store_artifacts:
