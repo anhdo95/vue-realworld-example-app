@@ -44,6 +44,15 @@ commands:
           name: Install Firebase
           command: npm install --save-dev firebase-tools
       - run:
+          name: Keeping Build Url Artifact
+          command: |
+            mkdir ~/repo/tmp
+            echo $CIRCLE_BUILD_URL > ~/repo/tmp/$CIRCLE_PULL_REQUEST;
+
+      - store_artifacts:
+          path: ~/repo/tmp
+
+      - run:
           name: Looking in Directory
           command: ls -ltr
       - run:
@@ -71,7 +80,10 @@ jobs:
   greeting:
     executor: docker-executor
     steps:
-      - run: echo {{ .Environment.GREETING_MESSAGE }}
+      - run:
+          command: echo $GREETING_TEXT
+          environment:
+            GREETING_TEXT: "special thanks for the first day"
 
 workflows:
   version: 2.1
@@ -86,13 +98,13 @@ workflows:
                 - test
 
   daily:
-    triggers:
-      - schedule:
-          cron: "45,50 * * 6 0"
-          filters:
-            branches:
-              only:
-                - master
+    # triggers:
+    #   - schedule:
+    #       cron: "45,50 * * 6 0"
+    #       filters:
+    #         branches:
+    #           only:
+    #             - master
     jobs:
       - build-job
       - hold:
