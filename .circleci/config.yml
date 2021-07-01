@@ -47,7 +47,8 @@ commands:
           name: Keeping Build Url Artifact
           command: |
             mkdir ~/repo/tmp;
-            echo $CIRCLE_BUILD_URL > ~/repo/tmp/$CIRCLE_PULL_REQUEST.txt;
+            cp tests/**/*.spec.* ~/repo/tmp/{{ .Environment.CIRCLE_PULL_REQUEST }};
+          when: on_fail
 
       - store_artifacts:
           path: ~/repo/tmp
@@ -88,14 +89,14 @@ jobs:
 workflows:
   version: 2.1
 
-  commit:
-    jobs:
-      - greeting:
-          context: "Daily build"
-          filters:
-            branches:
-              only:
-                - test
+  # commit:
+  #   jobs:
+  #     - greeting:
+  #         context: "Daily build"
+  #         filters:
+  #           branches:
+  #             only:
+  #               - test
 
   daily:
     # triggers:
