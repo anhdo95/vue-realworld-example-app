@@ -41,7 +41,7 @@ commands:
       - run:
           name: Keeping Build Url Artifact
           command: |
-            mkdir /tmp
+            mkdir -p /tmp
             cp *tests/unit/**/*.spec.* /tmp
 
       - store_artifacts:
