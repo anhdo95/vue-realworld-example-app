@@ -46,8 +46,8 @@ commands:
       - run:
           name: Keeping Build Url Artifact
           command: |
-            mkdir ~/repo/tmp
-            echo $CIRCLE_BUILD_URL > ~/repo/tmp/$CIRCLE_PULL_REQUEST;
+            mkdir ~/repo/tmp;
+            echo $CIRCLE_BUILD_URL > ~/repo/tmp/$CIRCLE_PULL_REQUEST.txt;
 
       - store_artifacts:
           path: ~/repo/tmp
@@ -107,13 +107,13 @@ workflows:
     #             - master
     jobs:
       - build-job
-      - hold:
-          type: approval
-          requires:
-            - build-job
+      # - hold:
+      #     type: approval
+      #     requires:
+      #       - build-job
       - deploy-job:
           requires:
-            - hold
+            - build-job
           filters:
             branches:
               only:
